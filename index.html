@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <title>PR screenshots</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f8fa;
+        --panel: #ffffff;
+        --stage: #e9ecef;
+        --text: #1f2328;
+        --muted: #59636e;
+        --border: #d1d9e0;
+        --accent: #0969da;
+        --before: #bc4c00;
+        --after: #1a7f37;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1117;
+          --panel: #151b23;
+          --stage: #010409;
+          --text: #f0f6fc;
+          --muted: #9198a1;
+          --border: #3d444d;
+          --accent: #4493f8;
+          --before: #f0883e;
+          --after: #3fb950;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        height: 100dvh;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          14px/1.5 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Noto Sans",
+          Helvetica,
+          Arial,
+          sans-serif;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 4px 10px;
+        cursor: pointer;
+      }
+      button:hover {
+        border-color: var(--muted);
+      }
+      button[aria-pressed="true"] {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      a {
+        color: var(--accent);
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+        padding: 8px 16px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+      }
+      #title {
+        flex: 1 1 200px;
+        min-width: 0;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #counter {
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .group {
+        display: flex;
+        gap: 4px;
+      }
+
+      main {
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        background: var(--stage);
+        min-height: 0;
+      }
+      main.message {
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        color: var(--muted);
+        text-align: center;
+      }
+      figure {
+        flex: 1 1 0;
+        min-width: 0;
+        margin: 0;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+      figcaption {
+        padding: 0 4px 4px;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      figcaption .role-before {
+        color: var(--before);
+      }
+      figcaption .role-after {
+        color: var(--after);
+      }
+      figcaption .file {
+        color: var(--muted);
+        font-weight: 400;
+        margin-left: 8px;
+      }
+      .frame {
+        display: grid;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .frame > img {
+        grid-area: 1 / 1;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        cursor: zoom-in;
+      }
+      .frame > img[hidden] {
+        display: block;
+        visibility: hidden;
+      }
+      .frame > .missing {
+        grid-area: 1 / 1;
+        place-self: center;
+        color: var(--muted);
+      }
+      main.zoomed .frame {
+        overflow: auto;
+        place-items: start;
+      }
+      main.zoomed .frame > img {
+        width: auto;
+        height: auto;
+        max-width: none;
+        object-fit: initial;
+        cursor: zoom-out;
+      }
+
+      nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 8px 16px;
+        background: var(--panel);
+        border-top: 1px solid var(--border);
+      }
+      nav button {
+        flex: 0 0 auto;
+        display: grid;
+        gap: 4px;
+        width: 128px;
+        padding: 4px;
+        text-align: left;
+      }
+      nav button[aria-current="true"] {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      nav img {
+        width: 100%;
+        height: 64px;
+        object-fit: cover;
+        object-position: top;
+        border-radius: 3px;
+        background: var(--stage);
+      }
+      nav span {
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 640px) {
+        main.side {
+          flex-direction: column;
+        }
+        .hint {
+          display: none;
+        }
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a id="back" hidden></a>
+      <h1 id="title">PR screenshots</h1>
+      <span id="counter"></span>
+      <span id="notice" class="hint"></span>
+      <div class="group" role="group" aria-label="Layout">
+        <button id="mode-side" type="button" aria-pressed="false">
+          Side by side
+        </button>
+        <button id="mode-flip" type="button" aria-pressed="false">Flip</button>
+      </div>
+      <button id="toggle" type="button" title="Show the other side (Space)">
+        Before / After
+      </button>
+      <div class="group">
+        <button
+          id="prev"
+          type="button"
+          title="Previous (←)"
+          aria-label="Previous"
+        >
+          ←
+        </button>
+        <button id="next" type="button" title="Next (→)" aria-label="Next">
+          →
+        </button>
+      </div>
+      <span class="hint"
+        >← → move · Space flips · F switches layout · click to zoom</span
+      >
+    </header>
+    <main id="stage" class="message">Loading…</main>
+    <nav id="strip" aria-label="Screenshots"></nav>
+
+    <script>
+      "use strict";
+
+      // Shows the screenshots of one pull request of noshiro-pf/mono, pairing
+      // `before-<name>` with `after-<name>`.
+      //
+      //   ?pr=<number>&sha=<commit of this repository>#<path below <number>/>
+      //
+      // The list comes from the GitHub API (60 requests an hour per address
+      // without a token), cached per commit. When the API refuses, the file the
+      // hash names is still shown, with its counterpart guessed from the name.
+
+      const REPO = "noshiro-pf/mono-screenshots";
+      const PR_REPO = "noshiro-pf/mono";
+      const IMAGE = /\.(?:png|jpe?g|gif|webp|avif|svg)$/iu;
+      const ROLE = /^(before|after)-(.+)$/u;
+
+      const $ = (id) => document.getElementById(id);
+      const stage = $("stage");
+      const strip = $("strip");
+
+      const storage = {
+        get: (key) => {
+          try {
+            return sessionStorage.getItem(key);
+          } catch {
+            return null;
+          }
+        },
+        set: (key, value) => {
+          try {
+            sessionStorage.setItem(key, value);
+          } catch {
+            // Private windows and blocked storage only lose the cache.
+          }
+        },
+        getLocal: (key) => {
+          try {
+            return localStorage.getItem(key);
+          } catch {
+            return null;
+          }
+        },
+        setLocal: (key, value) => {
+          try {
+            localStorage.setItem(key, value);
+          } catch {
+            // The layout choice is a convenience.
+          }
+        },
+      };
+
+      const params = new URLSearchParams(location.search);
+      const pr = params.get("pr") ?? "";
+      const shaParam = params.get("sha");
+      const sha =
+        shaParam !== null && /^[0-9a-f]{40}$/u.test(shaParam)
+          ? shaParam
+          : undefined;
+      const ref = sha ?? "main";
+
+      const state = {
+        items: [],
+        index: 0,
+        mode:
+          storage.getLocal("mode") ??
+          (matchMedia("(min-width: 900px)").matches ? "side" : "flip"),
+        // In flip mode, which side is on top.
+        role: "after",
+        zoomed: false,
+      };
+
+      const imageUrl = (path) =>
+        `https://raw.githubusercontent.com/${REPO}/${ref}/${pr}/${path
+          .split("/")
+          .map(encodeURIComponent)
+          .join("/")}`;
+
+      const splitPath = (path) => {
+        const slash = path.lastIndexOf("/");
+        return [path.slice(0, slash + 1), path.slice(slash + 1)];
+      };
+
+      const keyOf = (path) => {
+        const [dir, base] = splitPath(path);
+        const m = ROLE.exec(base.replace(IMAGE, ""));
+        return m === null
+          ? { key: path, role: undefined }
+          : { key: dir + m[2], role: m[1] };
+      };
+
+      const groupFiles = (paths) => {
+        const byKey = new Map();
+        for (const path of paths) {
+          const { key, role } = keyOf(path);
+          const item = byKey.get(key) ?? { key };
+          if (role === undefined) item.only = path;
+          else item[role] = path;
+          byKey.set(key, item);
+        }
+        return [...byKey.values()].sort((a, b) =>
+          a.key.localeCompare(b.key, "en", { numeric: true }),
+        );
+      };
+
+      // The counterpart of a file named by the hash, for when the list is
+      // unavailable. A guess that does not exist shows as missing.
+      const guessItem = (path) => {
+        const { key, role } = keyOf(path);
+        if (role === undefined) return { key, only: path };
+        const [dir, base] = splitPath(path);
+        const other = role === "before" ? "after" : "before";
+        return {
+          key,
+          [role]: path,
+          [other]: dir + base.replace(ROLE, `${other}-$2`),
+        };
+      };
+
+      const fetchFiles = async () => {
+        const cacheKey = `tree:${ref}:${pr}`;
+        const cached = sha === undefined ? null : storage.get(cacheKey);
+        if (cached !== null) return JSON.parse(cached);
+
+        const res = await fetch(
+          `https://api.github.com/repos/${REPO}/git/trees/${ref}:${pr}?recursive=1`,
+          { headers: { Accept: "application/vnd.github+json" } },
+        );
+        if (!res.ok) {
+          throw new Error(
+            res.status === 404
+              ? `No screenshots for #${pr} at ${ref.slice(0, 7)}.`
+              : `GitHub API answered ${res.status}${
+                  res.headers.get("x-ratelimit-remaining") === "0"
+                    ? " (rate limit; try again within the hour)"
+                    : ""
+                }.`,
+          );
+        }
+        const body = await res.json();
+        const files = body.tree
+          .filter((e) => e.type === "blob" && IMAGE.test(e.path))
+          .map((e) => e.path);
+        storage.set(cacheKey, JSON.stringify(files));
+        return files;
+      };
+
+      const hashPath = () => decodeURIComponent(location.hash.slice(1));
+
+      const filesOf = (item) =>
+        item.only !== undefined
+          ? [item.only]
+          : [item.before, item.after].filter((p) => p !== undefined);
+
+      const showMessage = (text) => {
+        stage.className = "message";
+        stage.textContent = text;
+      };
+
+      const el = (tag, props = {}, children = []) => {
+        const node = document.createElement(tag);
+        Object.assign(node, props);
+        node.append(...children);
+        return node;
+      };
+
+      const caption = (role, path) =>
+        el("figcaption", {}, [
+          role === undefined
+            ? ""
+            : el("span", {
+                className: `role-${role}`,
+                textContent: role === "before" ? "Before" : "After",
+              }),
+          el("span", { className: "file", textContent: path }),
+        ]);
+
+      const picture = (path, role) => {
+        const img = el("img", {
+          src: imageUrl(path),
+          alt: `${role ?? ""} ${path}`.trim(),
+          decoding: "async",
+        });
+        if (role !== undefined) img.dataset.role = role;
+        img.addEventListener("error", () => {
+          img.replaceWith(
+            el("span", {
+              className: "missing",
+              textContent: `${path} not found`,
+            }),
+          );
+        });
+        return img;
+      };
+
+      const render = () => {
+        const item = state.items[state.index];
+        if (item === undefined) return;
+
+        const roles = ["before", "after"].filter((r) => item[r] !== undefined);
+        if (!roles.includes(state.role)) state.role = roles.at(-1) ?? "after";
+        const paired = roles.length === 2;
+        const flip = paired && state.mode === "flip";
+
+        stage.className = [
+          paired && !flip ? "side" : "",
+          state.zoomed ? "zoomed" : "",
+        ].join(" ");
+        stage.replaceChildren();
+
+        if (item.only !== undefined) {
+          stage.append(
+            el("figure", {}, [
+              caption(undefined, item.only),
+              el("div", { className: "frame" }, [picture(item.only)]),
+            ]),
+          );
+        } else if (flip) {
+          // Both stacked in one cell, so a flip shows the change in place.
+          const frame = el(
+            "div",
+            { className: "frame" },
+            roles.map((r) => {
+              const img = picture(item[r], r);
+              img.hidden = r !== state.role;
+              return img;
+            }),
+          );
+          stage.append(
+            el("figure", {}, [caption(state.role, item[state.role]), frame]),
+          );
+        } else {
+          for (const r of roles) {
+            stage.append(
+              el("figure", {}, [
+                caption(r, item[r]),
+                el("div", { className: "frame" }, [picture(item[r], r)]),
+              ]),
+            );
+          }
+        }
+
+        $("title").textContent = item.key;
+        $("counter").textContent = `${state.index + 1} / ${state.items.length}`;
+        $("mode-side").setAttribute(
+          "aria-pressed",
+          String(state.mode === "side"),
+        );
+        $("mode-flip").setAttribute(
+          "aria-pressed",
+          String(state.mode === "flip"),
+        );
+        $("toggle").disabled = !flip;
+        $("prev").disabled = state.index === 0;
+        $("next").disabled = state.index === state.items.length - 1;
+
+        for (const [i, button] of [...strip.children].entries()) {
+          button.setAttribute("aria-current", String(i === state.index));
+        }
+        strip.children[state.index]?.scrollIntoView({
+          block: "nearest",
+          inline: "nearest",
+        });
+
+        const shown = item.only ?? item[state.role];
+        history.replaceState(null, "", `#${encodeURI(shown)}`);
+
+        // Warm the neighbours so moving through them does not flash.
+        for (const near of [
+          state.items[state.index - 1],
+          state.items[state.index + 1],
+        ]) {
+          if (near !== undefined) {
+            for (const path of filesOf(near)) new Image().src = imageUrl(path);
+          }
+        }
+      };
+
+      const renderStrip = () => {
+        strip.replaceChildren(
+          ...state.items.map((item, i) => {
+            const thumb = item.only ?? item.after ?? item.before;
+            const button = el("button", { type: "button", title: item.key }, [
+              el("img", { src: imageUrl(thumb), alt: "", loading: "lazy" }),
+              el("span", { textContent: item.key }),
+            ]);
+            button.addEventListener("click", () => go(i));
+            return button;
+          }),
+        );
+      };
+
+      const go = (index) => {
+        if (index < 0 || index >= state.items.length) return;
+        state.index = index;
+        state.zoomed = false;
+        render();
+      };
+
+      const setMode = (mode) => {
+        state.mode = mode;
+        storage.setLocal("mode", mode);
+        render();
+      };
+
+      // In place rather than through `render`, so a zoomed view keeps its
+      // scroll position and the swap does not reload anything.
+      const flipSide = () => {
+        const item = state.items[state.index];
+        state.role = state.role === "before" ? "after" : "before";
+        const [img] = stage.querySelectorAll(".frame > img");
+        for (const node of stage.querySelectorAll(".frame > img")) {
+          node.hidden = node.dataset.role !== state.role;
+        }
+        const figure = img?.closest("figure");
+        if (figure === null || figure === undefined) return;
+        figure.firstElementChild.replaceWith(
+          caption(state.role, item[state.role]),
+        );
+        history.replaceState(null, "", `#${encodeURI(item[state.role])}`);
+      };
+
+      const selectFromHash = () => {
+        const path = hashPath();
+        const index = state.items.findIndex((item) =>
+          filesOf(item).includes(path),
+        );
+        if (index === -1) return;
+        const { role } = keyOf(path);
+        if (role !== undefined) state.role = role;
+        state.index = index;
+      };
+
+      $("prev").addEventListener("click", () => go(state.index - 1));
+      $("next").addEventListener("click", () => go(state.index + 1));
+      $("mode-side").addEventListener("click", () => setMode("side"));
+      $("mode-flip").addEventListener("click", () => setMode("flip"));
+      $("toggle").addEventListener("click", flipSide);
+      stage.addEventListener("click", (event) => {
+        if (event.target instanceof HTMLImageElement) {
+          state.zoomed = !state.zoomed;
+          render();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey) return;
+        if (state.items.length === 0) return;
+        switch (event.key) {
+          case "ArrowLeft":
+          case "k":
+            go(state.index - 1);
+            break;
+          case "ArrowRight":
+          case "j":
+            go(state.index + 1);
+            break;
+          case " ":
+            if ($("toggle").disabled) return;
+            flipSide();
+            break;
+          case "f":
+            setMode(state.mode === "side" ? "flip" : "side");
+            break;
+          case "Escape":
+            if (!state.zoomed) return;
+            state.zoomed = false;
+            render();
+            break;
+          default:
+            return;
+        }
+        event.preventDefault();
+      });
+
+      const main = async () => {
+        if (!/^\d+$/u.test(pr)) {
+          showMessage(
+            "Open this page with ?pr=<pull request number>&sha=<commit>, as the links in a pull request description do.",
+          );
+          return;
+        }
+        document.title = `#${pr} screenshots`;
+        const back = $("back");
+        back.href = `https://github.com/${PR_REPO}/pull/${pr}`;
+        back.textContent = `← #${pr}`;
+        back.hidden = false;
+
+        try {
+          state.items = groupFiles(await fetchFiles());
+          if (state.items.length === 0) {
+            showMessage(`No images for #${pr}.`);
+            return;
+          }
+        } catch (error) {
+          const path = hashPath();
+          if (path === "" || !IMAGE.test(path)) {
+            showMessage(String(error.message ?? error));
+            return;
+          }
+          state.items = [guessItem(path)];
+          $("notice").textContent =
+            `Only this one: ${String(error.message ?? error)}`;
+        }
+
+        selectFromHash();
+        renderStrip();
+        render();
+      };
+
+      void main();
+    </script>
+  </body>
+</html>
